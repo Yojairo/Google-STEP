@@ -13,8 +13,12 @@
 // limitations under the License.
 
 async function addFavoriteIceCream() {
-  const response = await fetch('/data');
-  const flavor = await response.text();
-
-  document.getElementById('iceCream').innerText = 'My favorite ice cream is ' + flavor;
+  fetch('/data')
+    .then(response => response.json())
+    .then((flavors) => {
+      const flavorContainer = document.getElementById('iceCream');
+      flavorContainer.innerHTML = 'My favorite ice cream flavors are ';
+      flavorContainer.innerHTML += flavors[0] + ', ' + flavors[1] + ', and '
+        + flavors[2] + '.';
+    });
 }
