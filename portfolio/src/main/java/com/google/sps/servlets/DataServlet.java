@@ -26,11 +26,11 @@ import javax.servlet.http.HttpServletResponse;
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
- private List<String> flavors;
+ private static List<String> flavors;
 
   @Override
   public void init() {
-    flavors = new ArrayList<>();
+    flavors = new ArrayList<String>();
 
     flavors.add("Rocky Road");
     flavors.add("Chocolate");
