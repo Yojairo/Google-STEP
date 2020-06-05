@@ -21,6 +21,9 @@ import com.google.gson.Gson;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.SortDirection;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -29,32 +32,39 @@ import javax.servlet.http.HttpServletResponse;
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
- private static List<String> flavors;
  private static List<String> comments;
 
   @Override
   public void init() {
-    flavors = new ArrayList<String>();
     comments = new ArrayList<String>();
-
-    flavors.add("Rocky Road");
-    flavors.add("Chocolate");
-    flavors.add("Orange Sherbet");
   }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    comments.clear();
+    Query query = new Query("Task").addSort("timestamp", SortDirection.DESCENDING);
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    PreparedQuery results = datastore.prepare(query);
+
+    for (Entity entity : results.asIterable()) {
+      long id = entity.getKey().getId();
+      String comment = (String) entity.getProperty("comment");
+
+      comments.add(comment);
+    }
+
     response.setContentType("application/json;");
-    response.getWriter().println(convertToJson(flavors));
+    response.getWriter().println(convertToJson(comments));
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String message = request.getParameter("message");
+    String comment = request.getParameter("comment");
     long timestamp = System.currentTimeMillis();
 
     Entity taskEntity = new Entity("Task");
-    taskEntity.setProperty("message", message);
+    taskEntity.setProperty("comment", comment);
     taskEntity.setProperty("timestamp", timestamp);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -63,9 +73,9 @@ public class DataServlet extends HttpServlet {
     response.sendRedirect("/index.html");
   }
 
-  private String convertToJson(List flavors) {
+  private String convertToJson(List comments) {
     Gson gson = new Gson();
-    String json = gson.toJson(flavors);
+    String json = gson.toJson(comments);
     return json;
   }
 }

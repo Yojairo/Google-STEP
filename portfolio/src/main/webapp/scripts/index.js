@@ -12,13 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-async function addFavoriteIceCream() {
+async function loadComments() {
   fetch('/data')
     .then(response => response.json())
-    .then((flavors) => {
-      const flavorContainer = document.getElementById('iceCream');
-      flavorContainer.innerHTML = 'My favorite ice cream flavors are ';
-      flavorContainer.innerHTML += flavors[0] + ', ' + flavors[1] + ', and '
-        + flavors[2] + '.';
+    .then((comments) => {
+      const commentSectionContainer = document.getElementById('commentSection');
+      console.log(comments);
+      comments.forEach((comment) => {
+        commentSectionContainer.innerHTML += '<div class="card"> <div class="card-body text-primary">' + comment + ' </div> </div>';
+      })
     });
 }
