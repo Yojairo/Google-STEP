@@ -18,6 +18,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.Gson;
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -48,11 +51,16 @@ public class DataServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String message = request.getParameter("message");
+    long timestamp = System.currentTimeMillis();
 
-    comments.add(message);
+    Entity taskEntity = new Entity("Task");
+    taskEntity.setProperty("message", message);
+    taskEntity.setProperty("timestamp", timestamp);
 
-    response.setContentType("text/html;");
-    response.getWriter().println("Added '" + message + "' to comments.");
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    datastore.put(taskEntity);
+
+    response.sendRedirect("/index.html");
   }
 
   private String convertToJson(List flavors) {
