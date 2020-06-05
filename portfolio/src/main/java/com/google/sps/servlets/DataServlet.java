@@ -27,10 +27,12 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
  private static List<String> flavors;
+ private static List<String> comments;
 
   @Override
   public void init() {
     flavors = new ArrayList<String>();
+    comments = new ArrayList<String>();
 
     flavors.add("Rocky Road");
     flavors.add("Chocolate");
@@ -41,6 +43,16 @@ public class DataServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("application/json;");
     response.getWriter().println(convertToJson(flavors));
+  }
+
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    String message = request.getParameter("message");
+
+    comments.add(message);
+
+    response.setContentType("text/html;");
+    response.getWriter().println("Added '" + message + "' to comments.");
   }
 
   private String convertToJson(List flavors) {
