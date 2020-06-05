@@ -13,11 +13,24 @@
 // limitations under the License.
 
 async function loadComments() {
-  fetch('/data')
+  fetch('/data?length=10')
     .then(response => response.json())
     .then((comments) => {
       const commentSectionContainer = document.getElementById('commentSection');
       console.log(comments);
+      comments.forEach((comment) => {
+        commentSectionContainer.innerHTML += '<div class="card"> <div class="card-body text-primary">' + comment + ' </div> </div>';
+      })
+    });
+}
+
+async function refreshComments(commentLength) {
+  fetch('/data?length=' + commentLength.value)
+    .then(response => response.json())
+    .then((comments) => {
+      const commentSectionContainer = document.getElementById('commentSection');
+      console.log(comments);
+      commentSectionContainer.innerHTML = '';
       comments.forEach((comment) => {
         commentSectionContainer.innerHTML += '<div class="card"> <div class="card-body text-primary">' + comment + ' </div> </div>';
       })
