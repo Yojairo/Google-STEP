@@ -33,5 +33,5 @@ import javax.servlet.http.HttpServletResponse;
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/delete-data")
 public class DeleteDataServlet extends HttpServlet {
-  
+
 }
