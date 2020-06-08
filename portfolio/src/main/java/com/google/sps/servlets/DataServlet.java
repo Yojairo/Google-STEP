@@ -52,7 +52,6 @@ private static List<String> comments;
     PreparedQuery results = datastore.prepare(query);
 
     for (Entity entity : results.asIterable(FetchOptions.Builder.withLimit(length))) {
-      long id = entity.getKey().getId();
       String comment = (String) entity.getProperty("comment");
 
       comments.add(comment);

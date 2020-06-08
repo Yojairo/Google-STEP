@@ -36,3 +36,13 @@ async function refreshComments(commentLength) {
       })
     });
 }
+
+async function deleteComments() {
+  fetch('/delete-data', {
+    method: 'post'
+  })
+    .then(() => {
+      const commentSectionContainer = document.getElementById('commentSection');
+      commentSectionContainer.innerHTML = '';
+    });
+}
