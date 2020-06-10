@@ -257,6 +257,15 @@
                   </select>
 								</div>
 							</div>
+							<div class="col-md-4">
+								<label for="length">Choose language to display comments in:</label>
+								<select class="custom-select" name="length" id="length" onchange="refreshComments(this)">
+                    <option selected value="en">English</option>
+                    <option value="es">Spanish</option>
+                    <option value="zh">Mandarin Chinese</option>
+                    <option value="hi">Hindi</option>
+                  </select>
+							</div>
 						</div>
 						<div class="form-group">
 							<textarea class="form-control" aria-label="With textarea" id="comment" name="comment" placeholder="Comment"></textarea>
@@ -269,7 +278,6 @@
 									</div>
 									<div class="btn-group" role="group">
 										<button type="submit" class="btn btn-warning text-light">Delete All Comments</button>
-										<button type="submit" class="btn btn-info text-light">Translate</button>
 									</div>
 								</div>
 							</div>
