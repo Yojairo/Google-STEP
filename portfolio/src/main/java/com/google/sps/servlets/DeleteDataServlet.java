@@ -25,60 +25,26 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.FetchOptions;
+import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.Key;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that returns some example content. TODO: modify this file to handle comments data */
-@WebServlet("/data")
-public class DataServlet extends HttpServlet {
-  private static List<String> comments; 
-
+@WebServlet("/delete-data")
+public class DeleteDataServlet extends HttpServlet {
   @Override
-  public void init() {
-    comments = new ArrayList<String>();
-  }
-
-  @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    int length = Integer.parseInt(request.getParameter("length"));
-
-
-    comments.clear();
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Query query = new Query("Task").addSort("timestamp", SortDirection.DESCENDING);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
 
-    for (Entity entity : results.asIterable(FetchOptions.Builder.withLimit(length))) {
-      String comment = (String) entity.getProperty("comment");
-
-      comments.add(comment);
+    for (Entity entity : results.asIterable()) {
+      datastore.delete(entity.getKey());
     }
 
-    response.setContentType("application/json;");
-    response.getWriter().println(convertToJson(comments));
-  }
-
-  @Override
-  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String comment = request.getParameter("comment");
-    long timestamp = System.currentTimeMillis();
-
-    Entity taskEntity = new Entity("Task");
-    taskEntity.setProperty("comment", comment);
-    taskEntity.setProperty("timestamp", timestamp);
-
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(taskEntity);
-
     response.sendRedirect("/index.html");
-  }
-
-  private String convertToJson(List<String> comments) {
-    Gson gson = new Gson();
-    String json = gson.toJson(comments);
-    return json;
   }
 }

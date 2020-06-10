@@ -12,7 +12,7 @@
 	<title> Yojairo Morales </title>
 </head>
 
-<body onload="addFavoriteIceCream()">
+<body onload="refreshComments(document.getElementById('length'), document.getElementById('language'))">
 	<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary" id="navbar1" data-spy="scroll">
 		<div class="container">
 			<a class="navbar-brand mr-1 mb-1 mt-0" href="../"> Yojairo Morales </a>
@@ -67,8 +67,6 @@
 							to.</p>
 						<p> I hope to eventually inspire other underrepresented people of color to pursue
 							Computer Science to increase diversity and inclusion in tech.</p>
-
-						<p id="iceCream"></p>
 					</div>
 				</div>
 			</div>
@@ -243,6 +241,55 @@
 					<p> email: yojairom@usc.edu </p>
 				</div>
 			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<form action="data" method="POST">
+						<p><b> Leave a comment! </b></p>
+						<div class="row">
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="length">Choose amount of comments to display:</label>
+									<select class="custom-select" name="length" id="length" onchange="refreshComments(this, document.getElementById('language'))">
+                    <option value="1">1</option>
+                    <option value="5">5</option>
+                    <option selected>10</option>
+                    <option value="20">20</option>
+                  </select>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<label for="length">Choose language to display comments in:</label>
+								<select class="custom-select" name="language" id="language" onchange="refreshComments(document.getElementById('length'), this)">
+                    <option selected value="en">English</option>
+                    <option value="es">Spanish</option>
+                    <option value="zh">Mandarin Chinese</option>
+                    <option value="hi">Hindi</option>
+                  </select>
+							</div>
+						</div>
+						<div class="form-group">
+							<textarea class="form-control" aria-label="With textarea" id="comment" name="comment" placeholder="Comment"></textarea>
+						</div>
+						<div class="m-2 row">
+							<div class="col">
+								<div class="btn-toolbar justify-content-between" role="toolbar">
+									<div class="btn-group" role="group">
+										<button type="submit" class="btn btn-secondary text-light">Submit</button>
+									</div>
+									<div class="btn-group" role="group">
+										<button type="submit" class="btn btn-warning text-light">Delete All Comments</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col" id="commentSection">
+				</div>
+			</div>
+		</div>
 	</section>
 
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

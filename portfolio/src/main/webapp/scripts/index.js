@@ -12,9 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-async function addFavoriteIceCream() {
-  const response = await fetch('/data');
-  const flavor = await response.text();
+async function refreshComments(commentLength, language) {
+  console.log(language.value);
+  fetch('/data?length=' + commentLength.value)
+    .then(response => response.json())
+    .then((comments) => {
+      const commentSectionContainer = document.getElementById('commentSection');
+      console.log(comments);
+      commentSectionContainer.innerHTML = '';
+      comments.forEach((comment) => {
+        commentSectionContainer.innerHTML += '<div class="card"> <div class="card-body text-primary">' + comment + ' </div> </div>';
+      })
+    });
+}
 
-  document.getElementById('iceCream').innerText = 'My favorite ice cream is ' + flavor;
+async function deleteComments() {
+  fetch('/delete-data', {
+    method: 'post'
+  })
+    .then(() => {
+      const commentSectionContainer = document.getElementById('commentSection');
+      commentSectionContainer.innerHTML = '';
+    });
 }
