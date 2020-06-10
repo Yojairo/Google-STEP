@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-async function refreshComments(commentLength) {
+async function refreshComments(commentLength, language) {
+  console.log(language.value);
   fetch('/data?length=' + commentLength.value)
     .then(response => response.json())
     .then((comments) => {

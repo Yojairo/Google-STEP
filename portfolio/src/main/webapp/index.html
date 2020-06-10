@@ -12,7 +12,7 @@
 	<title> Yojairo Morales </title>
 </head>
 
-<body onload="refreshComments(document.getElementById('length'))">
+<body onload="refreshComments(document.getElementById('length'), document.getElementById('language'))">
 	<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary" id="navbar1" data-spy="scroll">
 		<div class="container">
 			<a class="navbar-brand mr-1 mb-1 mt-0" href="../"> Yojairo Morales </a>
@@ -249,7 +249,7 @@
 							<div class="col-md-4">
 								<div class="form-group">
 									<label for="length">Choose amount of comments to display:</label>
-									<select class="custom-select" name="length" id="length" onchange="refreshComments(this)">
+									<select class="custom-select" name="length" id="length" onchange="refreshComments(this, document.getElementById('language'))">
                     <option value="1">1</option>
                     <option value="5">5</option>
                     <option selected>10</option>
@@ -259,7 +259,7 @@
 							</div>
 							<div class="col-md-4">
 								<label for="length">Choose language to display comments in:</label>
-								<select class="custom-select" name="language" id="language" onchange="refreshComments(this)">
+								<select class="custom-select" name="language" id="language" onchange="refreshComments(document.getElementById('length'), this)">
                     <option selected value="en">English</option>
                     <option value="es">Spanish</option>
                     <option value="zh">Mandarin Chinese</option>
