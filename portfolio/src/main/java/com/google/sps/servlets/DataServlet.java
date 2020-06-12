@@ -25,6 +25,9 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.FetchOptions;
+import com.google.cloud.translate.Translate;
+import com.google.cloud.translate.TranslateOptions;
+import com.google.cloud.translate.Translation;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -43,21 +46,25 @@ public class DataServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     int length = Integer.parseInt(request.getParameter("length"));
-
+    String language = (String) request.getParameter("language");
 
     comments.clear();
     Query query = new Query("Task").addSort("timestamp", SortDirection.DESCENDING);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
+    Translate translate = TranslateOptions.getDefaultInstance().getService();
 
     for (Entity entity : results.asIterable(FetchOptions.Builder.withLimit(length))) {
       String comment = (String) entity.getProperty("comment");
+      Translation translation = 
+      translate.translate(comment, Translate.TranslateOption.targetLanguage(language));
 
-      comments.add(comment);
+      comments.add(translation.getTranslatedText());
     }
 
     response.setContentType("application/json;");
+    response.setCharacterEncoding("UTF-8");
     response.getWriter().println(convertToJson(comments));
   }
 

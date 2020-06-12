@@ -48,15 +48,15 @@ function drawChart() {
 }
 
 async function refreshComments(commentLength, language) {
-  console.log(language.value);
-  fetch('/data?length=' + commentLength.value)
+  fetch('/data?length=' + commentLength.value + '&language=' + language.value)
     .then(response => response.json())
     .then((comments) => {
       const commentSectionContainer = document.getElementById('commentSection');
       console.log(comments);
       commentSectionContainer.innerHTML = '';
       comments.forEach((comment) => {
-        commentSectionContainer.innerHTML += '<div class="card"> <div class="card-body text-primary">' + comment + ' </div> </div>';
+        commentSectionContainer.innerHTML += '<div class="card"> <div lang="' +
+          language.value + '" class="card-body text-primary">' + comment + ' </div> </div>';
       })
     });
 }
