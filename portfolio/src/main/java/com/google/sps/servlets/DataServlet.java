@@ -46,7 +46,7 @@ public class DataServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     int length = Integer.parseInt(request.getParameter("length"));
-    String language = (String) request.getParameter("language");
+    String language = request.getParameter("language");
 
     comments.clear();
     Query query = new Query("Task").addSort("timestamp", SortDirection.DESCENDING);
