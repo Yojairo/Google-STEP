@@ -48,20 +48,11 @@ public class DataServlet extends HttpServlet {
     int length = Integer.parseInt(request.getParameter("length"));
     String language = request.getParameter("language");
 
-    comments.clear();
-    Query query = new Query("Task").addSort("timestamp", SortDirection.DESCENDING);
+    clearComments();
 
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    PreparedQuery results = datastore.prepare(query);
-    Translate translate = TranslateOptions.getDefaultInstance().getService();
+    PreparedQuery results = retrieveQueryResults("Task", "timestamp");
 
-    for (Entity entity : results.asIterable(FetchOptions.Builder.withLimit(length))) {
-      String comment = (String) entity.getProperty("comment");
-      Translation translation = 
-      translate.translate(comment, Translate.TranslateOption.targetLanguage(language));
-
-      comments.add(translation.getTranslatedText());
-    }
+    addComments(length, language, results);
 
     response.setContentType("application/json;");
     response.setCharacterEncoding("UTF-8");
@@ -87,5 +78,27 @@ public class DataServlet extends HttpServlet {
     Gson gson = new Gson();
     String json = gson.toJson(comments);
     return json;
+  }
+
+  private void clearComments() {
+    comments.clear();
+  }
+
+  private PreparedQuery retrieveQueryResults(String key, String value) {
+    Query query = new Query(key).addSort(value, SortDirection.DESCENDING);
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    return datastore.prepare(query);
+  }
+
+  private void addComments(int length, String language, PreparedQuery results) {
+    Translate translate = TranslateOptions.getDefaultInstance().getService();
+
+    for (Entity entity : results.asIterable(FetchOptions.Builder.withLimit(length))) {
+      String comment = (String) entity.getProperty("comment");
+      Translation translation = 
+      translate.translate(comment, Translate.TranslateOption.targetLanguage(language));
+
+      comments.add(translation.getTranslatedText());
+    }
   }
 }
