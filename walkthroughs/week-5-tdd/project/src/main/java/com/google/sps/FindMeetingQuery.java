@@ -15,17 +15,20 @@
 package com.google.sps;
 
 import java.util.Collection;
+import java.util.Map;
+import java.util.HashMap;
 import java.io.*;
 import java.util.ArrayList;
 
 public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
     Collection<Event> relevantEvents = new ArrayList<Event>();
+    Map<Integer, Integer> times = new HashMap<Integer, Integer>();
 
-    reduceToRelevantEvents(relevantEvents);
+    reduceToRelevantEvents(relevantEvents, events, request);
   }
 
-  private void reduceToRelevantEvents(Collection<Event> relevantEvents) {
+  private void reduceToRelevantEvents(Collection<Event> relevantEvents, Collection<Event> events, MeetingRequest request) {
     for (Event event: events) {
       for (String attendee: request.getAttendees()) {
         if (event.getAttendees().contains(attendee)) {
