@@ -25,7 +25,18 @@ public final class FindMeetingQuery {
     Collection<Event> relevantEvents = new ArrayList<Event>();
     Map<Integer, Integer> times = new HashMap<Integer, Integer>();
 
+    initializeMap(times);
     reduceToRelevantEvents(relevantEvents, events, request);
+    markBusyTimes(relevantEvents, times);
+    getAvailableTimes(availableTimes, times);
+    
+    return null;
+  }
+
+  private void initializeMap(Map<Integer, Integer> times) {
+    for (int i = 0; i < 1440; i++) {
+      times.put(i, 0);
+    }
   }
 
   private void reduceToRelevantEvents(Collection<Event> relevantEvents, Collection<Event> events, MeetingRequest request) {
@@ -35,6 +46,14 @@ public final class FindMeetingQuery {
           relevantEvents.add(event);
           break;
         }
+      }
+    }
+  }
+
+  private void markBusyTimes(Collection<Event> relevantEvents, Map<Integer, Integer> times) {
+    for (Event event: relevantEvents) {
+      for(int i = event.getWhen().start(); i < event.getWhen().end(); i++) {
+        times.put(i, 1);
       }
     }
   }
