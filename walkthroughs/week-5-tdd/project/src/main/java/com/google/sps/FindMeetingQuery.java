@@ -15,8 +15,24 @@
 package com.google.sps;
 
 import java.util.Collection;
+import java.io.*;
+import java.util.ArrayList;
 
 public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
+    Collection<Event> relevantEvents = new ArrayList<Event>();
+
+    reduceToRelevantEvents(relevantEvents);
+  }
+
+  private void reduceToRelevantEvents(Collection<Event> relevantEvents) {
+    for (Event event: events) {
+      for (String attendee: request.getAttendees()) {
+        if (event.getAttendees().contains(attendee)) {
+          relevantEvents.add(event);
+          break;
+        }
+      }
+    }
   }
 }
