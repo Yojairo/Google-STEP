@@ -24,13 +24,14 @@ public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
     Collection<Event> relevantEvents = new ArrayList<Event>();
     Map<Integer, Integer> times = new HashMap<Integer, Integer>();
+    Collection<TimeRange> availableTimes = new ArrayList<TimeRange>();
 
     initializeMap(times);
     reduceToRelevantEvents(relevantEvents, events, request);
     markBusyTimes(relevantEvents, times);
-    getAvailableTimes(availableTimes, times);
-    
-    return null;
+    getAvailableTimes(request.getDuration(), availableTimes, times);
+
+    return availableTimes;
   }
 
   private void initializeMap(Map<Integer, Integer> times) {
@@ -56,5 +57,27 @@ public final class FindMeetingQuery {
         times.put(i, 1);
       }
     }
+  }
+
+  private void getAvailableTimes(long duration, Collection<TimeRange> availableTimes, Map<Integer, Integer> times) {
+    for(int i = 0; i < 1440; i++) {
+      if(times.get(i) == 0) {
+        int start = i;
+        while(i < 1440 && times.get(i) == 0) {
+          i++;
+        }
+        int end = i;
+        if(durationLongEnough(start, end, duration)) {
+          availableTimes.add(TimeRange.fromStartEnd(start, end, false));
+        }
+      }
+    }
+  }
+
+  private boolean durationLongEnough(int start, int end, long duration) {
+    if (end - start >= (int) duration) {
+      return true;
+    }
+    return false;
   }
 }
